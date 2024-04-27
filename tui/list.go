@@ -2,29 +2,28 @@ package tui
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ohzqq/audible"
 	"github.com/ohzqq/bubbles/list"
+	"github.com/ohzqq/cdb"
 	"golang.org/x/term"
 )
 
 type List struct {
 	list.Model
-	*audible.ProductsResponse
+	books []cdb.Book
 }
 
 type Item struct {
-	audible.Product
+	cdb.Book
 }
 
-func New(products *audible.ProductsResponse) List {
+func New(books []cdb.Book) List {
 	var items []list.Item
-	for _, product := range products.Products {
-		items = append(items, NewItem(product))
+	for _, book := range books {
+		items = append(items, NewItem(book))
 	}
 
 	w, h := TermSize()
@@ -33,22 +32,22 @@ func New(products *audible.ProductsResponse) List {
 	m.SetNoLimit()
 
 	return List{
-		Model:            m,
-		ProductsResponse: products,
+		Model: m,
+		books: books,
 	}
 }
 
-func (l List) Run() []audible.Product {
+func (l List) Run() ([]cdb.Book, error) {
 	p := tea.NewProgram(l)
 	_, err := p.Run()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	sel := l.ToggledItems()
-	books := make([]audible.Product, len(sel))
+	books := make([]cdb.Book, len(sel))
 	for _, idx := range sel {
-		books[idx] = l.Products[idx]
+		books[idx] = l.books[idx]
 	}
 
 	return books
@@ -68,35 +67,35 @@ func (l List) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return l, cmd
 }
 
-func NewItem(p audible.Product) Item {
+func NewItem(p cdb.Book) Item {
 	return Item{
-		Product: p,
+		Book: p,
 	}
 }
 
 func (i Item) authors() string {
 	var auths []string
 	for _, a := range i.Authors {
-		auths = append(auths, a["name"])
+		auths = append(auths, a)
 	}
 	return strings.Join(auths, " & ")
 }
 
 func (i Item) FilterValue() string {
-	return fmt.Sprintf("%s %s", i.Product.Title, i.authors())
+	return fmt.Sprintf("%s %s", i.Title, i.authors())
 }
 
 func (i Item) Title() string {
-	return fmt.Sprintf("%s & %s", i.Product.Title, i.authors())
+	return fmt.Sprintf("%s by %s", i.Title, i.authors())
 }
 
 func (i Item) Description() string {
-	return i.PublisherSummary
+	return i.Comments
 }
 
 func TermSize() (int, int) {
 	w, h, _ := term.GetSize(int(os.Stdin.Fd()))
-	println(w)
-	println(h)
+	//println(w)
+	//println(h)
 	return w, h
 }

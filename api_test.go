@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"testing"
+
+	"github.com/ohzqq/gbooks/tui"
 )
 
 func TestApiCall(t *testing.T) {
@@ -11,7 +13,14 @@ func TestApiCall(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	for _, vol := range vols {
+
+	ui := tui.New(vols)
+	books, err := ui.Run()
+	if err != nil {
+		t.Error(err)
+	}
+
+	for _, vol := range books {
 		fmt.Printf("%#v\n", vol)
 	}
 }
