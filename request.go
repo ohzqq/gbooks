@@ -35,7 +35,7 @@ func (r *Request) Author(kw string) *Request {
 	return r
 }
 
-func (r *Request) Tile(kw string) *Request {
+func (r *Request) Title(kw string) *Request {
 	r.title = kw
 	return r
 }

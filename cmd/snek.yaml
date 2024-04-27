@@ -19,7 +19,7 @@ Commands:
     - s
   Short: search google books
   Long: search the google books api
-  Args: cobra.ExactArgs(1),
+  Args: cobra.ExactArgs(1)
   Flags:
     - Name: author
       Shorthand: a

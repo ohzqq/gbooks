@@ -2,22 +2,23 @@
 package cmd
 
 import (
-"github.com/spf13/cobra"
-"github.com/spf13/viper"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var searchCmd = &cobra.Command{
-Use: "search",
-Aliases: []string{"s"},
-Short: "search google books",
-Long: "search the google books api",
-Args: cobra.ExactArgs(1),,
-Run: searchCmdRun,
+	Use:     "search",
+	Aliases: []string{"s"},
+	Short:   "search google books",
+	Long:    "search the google books api",
+	Args:    cobra.ExactArgs(1),
+	Run:     searchCmdRun,
 }
+
 func init() {
-rootCmd.AddCommand(searchCmd)
-searchCmd.Flags().StringP("author","a","","search the author field")
-viper.BindPFlag("author", searchCmd.Flags().Lookup("author"))
-searchCmd.Flags().StringP("title","t","","search the title field")
-viper.BindPFlag("title", searchCmd.Flags().Lookup("title"))
+	rootCmd.AddCommand(searchCmd)
+	searchCmd.Flags().StringP("author", "a", "", "search the author field")
+	viper.BindPFlag("author", searchCmd.Flags().Lookup("author"))
+	searchCmd.Flags().StringP("title", "t", "", "search the title field")
+	viper.BindPFlag("title", searchCmd.Flags().Lookup("title"))
 }
