@@ -1,3 +1,5 @@
+//go:build ignore
+
 package main
 
 import (
@@ -12,16 +14,11 @@ import (
 	gb "google.golang.org/api/books/v1"
 )
 
-const apiHost = `www.googleapis.com`
-const apiPath = `/books/v1/volumes`
-const gBooksVol = `https://www.googleapis.com/books/v1/volumes`
-const gBooksBook = `https://www.googleapis.com/books/v1/volumes/`
-
-var Client = &api{
+var Client = &Api{
 	client: &http.Client{},
 }
 
-type api struct {
+type Api struct {
 	api    *gb.Service
 	client *http.Client
 	Results
@@ -33,15 +30,11 @@ type Results struct {
 	Total int          `json:"totalItems"`
 }
 
-func Search(q *ur.Query) ur.Feed {
+func Get(q string) ur.Feed {
 	return Api(q)
 }
 
-func Api(q *ur.Query) *api {
-	return Client.GetBooks(q)
-}
-
-func (client *api) Search(q *ur.Query) ur.Feed {
+func (client *Api) Search(q *ur.Query) ur.Feed {
 	return client.GetBooks(q)
 }
 
@@ -53,7 +46,7 @@ func (p Results) Pubs() []op.Publication {
 	return books
 }
 
-func (s *api) GetBooks(q *ur.Query) (*api, error) {
+func (s *Api) GetBooks(q *ur.Query) (*Api, error) {
 	req := parseQuery(q)
 	resp, err := s.client.Get(req.String())
 	if err != nil {
