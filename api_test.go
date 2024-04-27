@@ -11,7 +11,7 @@ func TestApiCall(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	for _, vol := range vols.Items {
-		fmt.Printf("%#v\n", vol.VolumeInfo)
+	for _, vol := range vols {
+		fmt.Printf("%#v\n", vol)
 	}
 }
