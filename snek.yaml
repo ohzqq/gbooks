@@ -1,0 +1,21 @@
+Viper: true
+Root:
+  Use: "gbooks"
+  Short: "search google books"
+  Long: search google books and output metadata to various formats
+  NoCommand: true
+  PersistentFlags:
+    - Name: ext
+      Shorthand: e
+      Value: .yaml
+      Usage: extension to save (default ".yaml")
+      Viper: true
+    - Name: no-meta
+      Value: false
+      Usage: don't write metadata to disk
+Commands:
+- Use: "search"
+  Aliases:
+    - s
+  Short: search google books
+  Long: search the google books api
