@@ -1,4 +1,4 @@
-package tui
+package main
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ type Item struct {
 	cdb.Book
 }
 
-func New(books []cdb.Book) List {
+func NewUI(books []cdb.Book) List {
 	var items []list.Item
 	for _, book := range books {
 		items = append(items, NewItem(book))
