@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -21,5 +22,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringSliceP("ext", "e", []string{".yaml", ".ini"}, "extension for metadata")
+	viper.BindPFlag("ext", rootCmd.PersistentFlags().Lookup("ext"))
+	rootCmd.PersistentFlags().Bool("dont-save", false, "write meta to stdout")
+	viper.BindPFlag("dont-save", rootCmd.PersistentFlags().Lookup("dont-save"))
 }
