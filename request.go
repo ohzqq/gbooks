@@ -34,3 +34,8 @@ func (r *Request) Tile(kw string) *Request {
 	r.Query.Add("q", "intitle:"+kw)
 	return r
 }
+
+func (r *Request) String() string {
+	r.url.RawQuery = r.Query.Encode()
+	return r.url.String()
+}
