@@ -95,7 +95,5 @@ func (i Item) Description() string {
 
 func TermSize() (int, int) {
 	w, h, _ := term.GetSize(int(os.Stdin.Fd()))
-	//println(w)
-	//println(h)
 	return w, h
 }

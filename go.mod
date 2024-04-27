@@ -39,6 +39,7 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
+	github.com/ohzqq/audbk v0.0.11 // indirect
 	github.com/ohzqq/bubbles v0.16.423 // indirect
 	github.com/ohzqq/cdb v0.0.111 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
