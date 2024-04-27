@@ -28,7 +28,6 @@ type api struct {
 }
 
 type Results struct {
-	query *ur.Query
 	self  string
 	Items []book.GBook `json:"items"`
 	Total int          `json:"totalItems"`
@@ -46,12 +45,6 @@ func (client *api) Search(q *ur.Query) ur.Feed {
 	return client.GetBooks(q)
 }
 
-//func (client *api) Search() func(*ur.Query) ur.Feed {
-//  return func(q *ur.Query) ur.Feed {
-//    return client.GetBooks(q)
-//  }
-//}
-
 func (p Results) Pubs() []op.Publication {
 	var books []op.Publication
 	for _, book := range p.Items {
@@ -60,52 +53,28 @@ func (p Results) Pubs() []op.Publication {
 	return books
 }
 
-func (p Results) Meta() op.Metadata {
-	meta := op.Metadata{
-		Title: "GBooks",
-	}
-	meta.ItemsPerPage = p.query.Filter.Limit
-	meta.CurrentPage = p.query.Filter.Page
-	meta.NumberOfItems = p.Total
-	return meta
-}
-
-func (r Results) Self() op.Link {
-	return op.NewLink(r.self, "self")
-}
-
-func (p Results) Facets() []op.Facet {
-	return []op.Facet{op.Facet{}}
-}
-
-//func (s Scraper) GetBook(id string) *gb.Volume {
-//  resp, err := s.client.Get(gBooksBook + id)
-//  util.HandleError("list call", err)
-//  defer resp.Body.Close()
-
-//  body, errr := io.ReadAll(resp.Body)
-//  util.HandleError("list call", errr)
-
-//  meta := new(gb.Volume)
-//  err = json.Unmarshal(body, meta)
-//  return meta
-//}
-
-func (s *api) GetBooks(q *ur.Query) *api {
+func (s *api) GetBooks(q *ur.Query) (*api, error) {
 	req := parseQuery(q)
 	resp, err := s.client.Get(req.String())
-	ur.HandleError("list call", err)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
-	body, errr := io.ReadAll(resp.Body)
-	ur.HandleError("list call", errr)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	//var vols Results
 	err = json.Unmarshal(body, &s.Results)
+	if err != nil {
+		return nil, err
+	}
 	s.query = q
 	s.self = req.String()
 
-	return s
+	return s, nil
 }
 
 func parseQuery(q *ur.Query) *url.URL {
