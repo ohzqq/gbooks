@@ -50,7 +50,7 @@ func (l List) Run() ([]cdb.Book, error) {
 		books[idx] = l.books[idx]
 	}
 
-	return books
+	return books, nil
 }
 
 func (l List) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -82,11 +82,11 @@ func (i Item) authors() string {
 }
 
 func (i Item) FilterValue() string {
-	return fmt.Sprintf("%s %s", i.Title, i.authors())
+	return fmt.Sprintf("%s %s", i.Book.Title, i.authors())
 }
 
 func (i Item) Title() string {
-	return fmt.Sprintf("%s by %s", i.Title, i.authors())
+	return fmt.Sprintf("%s by %s", i.Book.Title, i.authors())
 }
 
 func (i Item) Description() string {
